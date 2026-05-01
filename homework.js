@@ -27,6 +27,11 @@ async function getProducts() {
 	// 1. 使用 fetch() 發送 GET 請求
 	// 2. 使用 response.json() 解析回應
 	// 3. 回傳 data.products
+	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/products');
+	const data=await response.json()
+	return data.products;
+
+
 }
 
 /**
@@ -35,6 +40,10 @@ async function getProducts() {
  */
 async function getCart() {
 	// 請實作此函式
+	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/carts');
+	const data = await response.json();
+	const {carts , total , finalTotal }=data;
+	return {carts , total , finalTotal};
 }
 
 /**
@@ -48,6 +57,21 @@ async function getProductsSafe() {
 	// 2. 檢查 response.ok 判斷是否成功
 	// 3. 成功回傳 { success: true, data: [...] }
 	// 4. 失敗回傳 { success: false, error: '錯誤訊息' }
+	try {
+		const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/products');
+		const data=await response.json()
+
+		 if (!response.ok) {
+      	
+      	return {success: false,error:Data.message,};
+		 }
+		 return {success: true, data: data.products};
+	} catch (error) {
+	return {success: false,error: error.message,};
+		
+	}
+	
+
 }
 
 // ========================================
@@ -67,6 +91,26 @@ async function addToCart(productId, quantity) {
 	// 2. body 格式：{ data: { productId: "xxx", quantity: 1 } }
 	// 3. 記得設定 headers: { 'Content-Type': 'application/json' }
 	// 4. body 要用 JSON.stringify() 轉換
+	const response = await fetch(
+    `${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+    {
+      method: "POST", // 指定 HTTP 方法
+      headers: {
+        "Content-Type": "application/json", // 告訴伺服器資料格式
+      },
+      body: JSON.stringify({
+        // 將物件轉換為 JSON 字串
+        data: {
+          productId: productId,
+          quantity: quantity,
+        },
+      }),
+    },
+  );
+
+  const data = await response.json();
+  return data;
+
 }
 
 /**
@@ -80,6 +124,23 @@ async function updateCartItem(cartId, quantity) {
 	// 提示：
 	// 1. 發送 PATCH 請求
 	// 2. body 格式：{ data: { id: "購物車ID", quantity: 數量 } }
+	const response = await fetch(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          id: cartId, // 要更新的項目 ID
+          quantity: quantity, // 新的數量
+        },
+      }),
+    },
+  );
+
+  const data = await response.json();
+  return data;
 }
 
 /**
@@ -90,6 +151,15 @@ async function updateCartItem(cartId, quantity) {
 async function removeCartItem(cartId) {
 	// 請實作此函式
 	// 提示：發送 DELETE 請求到 /carts/{id}
+	 const response = await fetch(
+    `${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts/${cartId}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  const data = await response.json();
+  return data;
 }
 
 /**
@@ -99,6 +169,16 @@ async function removeCartItem(cartId) {
 async function clearCart() {
 	// 請實作此函式
 	// 提示：發送 DELETE 請求到 /carts
+	const response = await fetch(
+    `${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  const data = await response.json();
+  return data;
+
 }
 
 // ========================================
