@@ -27,8 +27,9 @@ async function getProducts() {
 	// 1. 使用 fetch() 發送 GET 請求
 	// 2. 使用 response.json() 解析回應
 	// 3. 回傳 data.products
-	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/products');
-	const data=await response.json()
+	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${API_PATH}/products');
+	const data=await response.json();
+	console.log(data);
 	return data.products;
 
 
@@ -40,7 +41,7 @@ async function getProducts() {
  */
 async function getCart() {
 	// 請實作此函式
-	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/carts');
+	const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts');
 	const data = await response.json();
 	const {carts , total , finalTotal }=data;
 	return {carts , total , finalTotal};
@@ -58,7 +59,7 @@ async function getProductsSafe() {
 	// 3. 成功回傳 { success: true, data: [...] }
 	// 4. 失敗回傳 { success: false, error: '錯誤訊息' }
 	try {
-		const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${m7479543@gmail.com}/products');
+		const response=await fetch('${BASE_URL}/api/livejs/v1/customer/${API_PATH}/products');
 		const data=await response.json()
 
 		 if (!response.ok) {
@@ -94,16 +95,11 @@ async function addToCart(productId, quantity) {
 	const response = await fetch(
     `${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`,
     {
-      method: "POST", // 指定 HTTP 方法
-      headers: {
-        "Content-Type": "application/json", // 告訴伺服器資料格式
-      },
+      method: "POST", 
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         // 將物件轉換為 JSON 字串
-        data: {
-          productId: productId,
-          quantity: quantity,
-        },
+        data: {productId: productId,quantity: quantity},
       }),
     },
   );
